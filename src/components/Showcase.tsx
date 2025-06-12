@@ -90,7 +90,6 @@ const Showcase = () => {
   const texts = ['Creating', 'Building', 'Designing', 'Crafting', 'Developing'];
   
   useEffect(() => {
-    // Initialize likes
     const initialLikes: {[key: number]: number} = {};
     [...showcaseItems, ...additionalItems].forEach((item, index) => {
       initialLikes[index] = item.likes;
@@ -141,7 +140,7 @@ const Showcase = () => {
     <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20">
-          <div className="inline-flex items-center px-4 py-2 bg-purple-100 rounded-full text-purple-800 text-sm font-medium mb-6">
+          <div className="inline-flex items-center px-4 py-2 bg-purple-100 rounded-full text-purple-800 text-sm font-medium mb-6 animate-bounce-subtle">
             🎨 Creator Showcase
           </div>
           <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">

@@ -1,75 +1,119 @@
-import React from 'react';
-import { Check, Star } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { Check, Star } from "lucide-react";
 
 const plans = [
   {
-    name: 'Starter',
-    price: 'Free',
-    description: 'Perfect for getting started',
+    name: "Starter",
+    price: "Free",
+    description: "Perfect for getting started",
     features: [
-      '1 Website',
-      'Basic Templates',
-      'Community Support',
-      '1GB Storage',
-      'Selfbook Branding'
+      "1 Website",
+      "Basic Templates",
+      "Community Support",
+      "1GB Storage",
+      "Selfbook Branding",
     ],
-    isPopular: false
+    isPopular: false,
   },
   {
-    name: 'Creator',
-    price: '$9',
-    period: '/month',
-    description: 'Best for growing creators',
+    name: "Creator",
+    price: "$9",
+    period: "/month",
+    description: "Best for growing creators",
     features: [
-      '5 Websites',
-      'Premium Templates',
-      'Priority Support',
-      '10GB Storage',
-      'Custom Domain',
-      'Remove Branding',
-      'Analytics Dashboard'
+      "5 Websites",
+      "Premium Templates",
+      "Priority Support",
+      "10GB Storage",
+      "Custom Domain",
+      "Remove Branding",
+      "Analytics Dashboard",
     ],
-    isPopular: true
+    isPopular: true,
   },
   {
-    name: 'Professional',
-    price: '$29',
-    period: '/month',
-    description: 'For serious professionals',
+    name: "Professional",
+    price: "$29",
+    period: "/month",
+    description: "For serious professionals",
     features: [
-      'Unlimited Websites',
-      'All Premium Templates',
-      '24/7 Support',
-      '100GB Storage',
-      'Advanced Analytics',
-      'SEO Optimization',
-      'White Label Options',
-      'API Access'
+      "Unlimited Websites",
+      "All Premium Templates",
+      "24/7 Support",
+      "100GB Storage",
+      "Advanced Analytics",
+      "SEO Optimization",
+      "White Label Options",
+      "API Access",
     ],
-    isPopular: false
-  }
+    isPopular: false,
+  },
 ];
 
 const Pricing = () => {
+  const [currentText, setCurrentText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const texts = [
+    "Pricing Plans",
+    "Our Packages",
+    "Choose Your Plan",
+    "Affordable Rates",
+    "Pricing Options",
+  ];
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => {
+        const current = texts[currentIndex];
+
+        if (isDeleting) {
+          setCurrentText(current.substring(0, currentText.length - 1));
+        } else {
+          setCurrentText(current.substring(0, currentText.length + 1));
+        }
+
+        if (!isDeleting && currentText === current) {
+          setTimeout(() => setIsDeleting(true), 2000);
+        } else if (isDeleting && currentText === "") {
+          setIsDeleting(false);
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % texts.length);
+        }
+      },
+      isDeleting ? 50 : 100
+    );
+
+    return () => clearTimeout(timeout);
+  }, [currentText, isDeleting, currentIndex, texts]);
+
   return (
     <section id="pricing" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Simple,
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"> Transparent Pricing</span>
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient block min-h-[1.2em]">
+                {currentText}
+                <span className="animate-pulse">|</span>
+              </span>
+            </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose the perfect plan for your needs. All plans include our core features with no hidden fees.
+            Choose the perfect plan for your needs. All plans include our core
+            features with no hidden fees.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {plans.map((plan, index) => (
-            <div 
+            <div
               key={index}
               className={`relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 border-2 ${
-                plan.isPopular ? 'border-blue-500' : 'border-gray-100 hover:border-blue-200'
+                plan.isPopular
+                  ? "border-blue-500"
+                  : "border-gray-100 hover:border-blue-200"
               }`}
             >
               {plan.isPopular && (
@@ -82,11 +126,17 @@ const Pricing = () => {
               )}
 
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">{plan.name}</h3>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                  {plan.name}
+                </h3>
                 <p className="text-gray-600 mb-4">{plan.description}</p>
                 <div className="flex items-baseline justify-center">
-                  <span className="text-5xl font-bold text-gray-900">{plan.price}</span>
-                  {plan.period && <span className="text-gray-600 ml-1">{plan.period}</span>}
+                  <span className="text-5xl font-bold text-gray-900">
+                    {plan.price}
+                  </span>
+                  {plan.period && (
+                    <span className="text-gray-600 ml-1">{plan.period}</span>
+                  )}
                 </div>
               </div>
 
@@ -99,12 +149,14 @@ const Pricing = () => {
                 ))}
               </ul>
 
-              <button className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
-                plan.isPopular
-                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl'
-                  : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-              }`}>
-                {plan.price === 'Free' ? 'Get Started' : 'Choose Plan'}
+              <button
+                className={`w-full py-4 px-6 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 ${
+                  plan.isPopular
+                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl"
+                    : "bg-gray-100 text-gray-900 hover:bg-gray-200"
+                }`}
+              >
+                {plan.price === "Free" ? "Get Started" : "Choose Plan"}
               </button>
             </div>
           ))}

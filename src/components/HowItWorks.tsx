@@ -1,85 +1,131 @@
-import React from 'react';
-import { UserPlus, Palette, Share2, TrendingUp } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { UserPlus, Palette, Share2, TrendingUp } from "lucide-react";
 
 const steps = [
   {
     icon: UserPlus,
-    title: 'Sign Up Free',
-    description: 'Create your account in seconds and start building immediately with our intuitive platform.',
-    color: 'from-blue-500 to-purple-500',
-    step: '01'
+    title: "Sign Up Free",
+    description:
+      "Create your account in seconds and start building immediately with our intuitive platform.",
+    color: "from-blue-500 to-purple-500",
+    step: "01",
   },
   {
     icon: Palette,
-    title: 'Choose & Customize',
-    description: 'Select from beautiful templates and customize every detail to match your unique style.',
-    color: 'from-purple-500 to-pink-500',
-    step: '02'
+    title: "Choose & Customize",
+    description:
+      "Select from beautiful templates and customize every detail to match your unique style.",
+    color: "from-purple-500 to-pink-500",
+    step: "02",
   },
   {
     icon: Share2,
-    title: 'Publish & Share',
-    description: 'Launch your website with one click and share your story with the world instantly.',
-    color: 'from-pink-500 to-red-500',
-    step: '03'
+    title: "Publish & Share",
+    description:
+      "Launch your website with one click and share your story with the world instantly.",
+    color: "from-pink-500 to-red-500",
+    step: "03",
   },
   {
     icon: TrendingUp,
-    title: 'Grow & Succeed',
-    description: 'Track your growth with analytics and connect with your audience like never before.',
-    color: 'from-green-500 to-blue-500',
-    step: '04'
-  }
+    title: "Grow & Succeed",
+    description:
+      "Track your growth with analytics and connect with your audience like never before.",
+    color: "from-green-500 to-blue-500",
+    step: "04",
+  },
 ];
 
 const HowItWorks = () => {
+  const [currentText, setCurrentText] = useState("");
+  const [currentIndexx, setCurrentIndexx] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const texts = [
+    "How It Works",
+    "Our Process",
+    "Simple Steps",
+    "The Journey",
+    "Easy Process",
+  ];
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => {
+        const current = texts[currentIndexx];
+
+        if (isDeleting) {
+          setCurrentText(current.substring(0, currentText.length - 1));
+        } else {
+          setCurrentText(current.substring(0, currentText.length + 1));
+        }
+
+        if (!isDeleting && currentText === current) {
+          setTimeout(() => setIsDeleting(true), 2000);
+        } else if (isDeleting && currentText === "") {
+          setIsDeleting(false);
+          setCurrentIndexx((prevIndex) => (prevIndex + 1) % texts.length);
+        }
+      },
+      isDeleting ? 50 : 100
+    );
+
+    return () => clearTimeout(timeout);
+  }, [currentText, isDeleting, currentIndexx, texts]);
+
   return (
     <section className="py-24 bg-white relative overflow-hidden">
       <div className="absolute inset-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"></div>
       </div>
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-20">
-          <div className="inline-flex items-center px-4 py-2 bg-green-100 rounded-full text-green-800 text-sm font-medium mb-6">
+          <div className="inline-flex items-center px-4 py-2 bg-green-100 rounded-full text-green-800 text-sm font-medium mb-6 animate-bounce-subtle">
             🚀 How It Works
           </div>
           <h2 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             From Idea to
-            <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent"> Live Website</span>
+            <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient block min-h-[1.2em]">
+                {currentText}
+                <span className="animate-pulse">|</span>
+              </span>
+            </span>
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            Building your digital presence has never been easier. Follow these simple steps to create something amazing.
+            Building your digital presence has never been easier. Follow these
+            simple steps to create something amazing.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => (
-            <div 
-              key={index}
-              className="group relative text-center"
-            >
-              {/* Connection line */}
+            <div key={index} className="group relative text-center">
               {index < steps.length - 1 && (
                 <div className="hidden lg:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-gray-300 to-transparent z-0"></div>
               )}
-              
+
               <div className="relative z-10 bg-white rounded-2xl p-8 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 border border-gray-100 hover:border-transparent">
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <div className={`w-8 h-8 bg-gradient-to-r ${step.color} rounded-full flex items-center justify-center text-white text-sm font-bold`}>
+                  <div
+                    className={`w-8 h-8 bg-gradient-to-r ${step.color} rounded-full flex items-center justify-center text-white text-sm font-bold`}
+                  >
                     {step.step}
                   </div>
                 </div>
-                
-                <div className={`w-20 h-20 bg-gradient-to-r ${step.color} rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg`}>
+
+                <div
+                  className={`w-20 h-20 bg-gradient-to-r ${step.color} rounded-2xl flex items-center justify-center mb-6 mx-auto group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg`}
+                >
                   <step.icon className="h-10 w-10 text-white" />
                 </div>
-                
+
                 <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-600 transition-colors duration-300">
                   {step.title}
                 </h3>
-                
+
                 <p className="text-gray-600 leading-relaxed">
                   {step.description}
                 </p>

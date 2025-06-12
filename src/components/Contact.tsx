@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Mail,
   Phone,
@@ -18,10 +18,21 @@ const Contact = () => {
     message: "",
   });
 
+  const [currentText, setCurrentText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const texts = [
+    "Amazing Together",
+    "Let's Connect",
+    "Contact Me",
+    "Start a Conversation",
+    "Reach Out Today",
+  ];
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState({ type: "", message: "" });
 
-  // Telegram Bot configuration
   const TELEGRAM_BOT_TOKEN = "8051594139:AAF9iTQ41X8aM59PoxnB_qUjPwcBIUnvwQ8";
   const TELEGRAM_CHAT_ID = "-1002770959014";
 
@@ -33,6 +44,30 @@ const Contact = () => {
       [e.target.name]: e.target.value,
     });
   };
+
+  useEffect(() => {
+    const timeout = setTimeout(
+      () => {
+        const current = texts[currentIndex];
+
+        if (isDeleting) {
+          setCurrentText(current.substring(0, currentText.length - 1));
+        } else {
+          setCurrentText(current.substring(0, currentText.length + 1));
+        }
+
+        if (!isDeleting && currentText === current) {
+          setTimeout(() => setIsDeleting(true), 2000);
+        } else if (isDeleting && currentText === "") {
+          setIsDeleting(false);
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % texts.length);
+        }
+      },
+      isDeleting ? 50 : 100
+    );
+
+    return () => clearTimeout(timeout);
+  }, [currentText, isDeleting, currentIndex, texts]);
 
   const sendToTelegram = async (data: typeof formData) => {
     const message = `
@@ -135,14 +170,16 @@ ${data.message}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-20">
-          <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-medium mb-6">
+          <div className="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white text-sm font-medium mb-6 animate-bounce-subtle">
             💬 Get In Touch
           </div>
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
             Let's Create Something
             <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              {" "}
-              Amazing Together
+              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent animate-gradient block min-h-[1.2em]">
+                {currentText}
+                <span className="animate-pulse">|</span>
+              </span>
             </span>
           </h2>
           <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
